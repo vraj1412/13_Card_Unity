@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GamePlayUiManager : MonoBehaviour
 {
-
+    #region SettingPopUP elements
     [Header("SettingPopUp")]
     public GameObject SettingPopUp;
     [Space]
@@ -27,8 +30,23 @@ public class GamePlayUiManager : MonoBehaviour
     [Header("SoundAndMusic Clip")]
     public AudioClip Button_Clip;
     public AudioClip BgMusic_Clip;
+    #endregion
+    [Space]
+    [Space]
+    #region  Game element
 
+    public List<Sprite> Card_Sprite = new List<Sprite>();
+    // public List<Image> Card_Image = new List <Image>();
+    public List<Card> cards = new List<Card>();
+    public List<GameObject> Card_GameObjects = new List<GameObject>();
 
+    public GameObject Pref_GameObject;
+
+    public Transform Parent1_GameObject;
+    public Transform Parent2_GameObject;
+    public Transform Parent3_GameObject;
+
+    #endregion
 
 
     public SoundAndMusicManager Ref_SoundAndMusicManager;
@@ -44,6 +62,8 @@ public class GamePlayUiManager : MonoBehaviour
 
         SetSoundAndMusicValue();
         Ref_SoundAndMusicManager.PlayMusic(BgMusic_Clip);
+
+        GameStart();
     }
 
     #region SettingPopUP Open Close
@@ -57,6 +77,7 @@ public class GamePlayUiManager : MonoBehaviour
     }
 
     #endregion
+
     #region Sound And Music Function
     public void Sound_Slidar()
     {
@@ -165,6 +186,100 @@ public class GamePlayUiManager : MonoBehaviour
 
     }
     #endregion
+
+    #region Game Scripting
+
+    public bool FindEliment(Card card, List<Card> cards)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].Color == card.Color && cards[i].Name == card.Name)
+                return true;
+        }
+        return false;
+    }
+    public void CreatCard(Card card)
+    {
+
+        if (!cards.Any())
+        {
+            cards.Add(card);
+        }
+        else if (!FindEliment(card, cards))
+        {
+
+            cards.Add(card);
+            return;
+        }
+    }
+
+    public void CreatCardList()
+    {
+        cards.Clear();
+        while (cards.Count < 13)
+        {
+            CreatCard(LoadRendomCard());
+        }
+    }
+
+    public Card LoadRendomCard()
+    {
+        Card card = new Card((Color)Random.Range(0, 4), (NameOfCard)Random.Range(0, 13));
+        return card;
+
+    }
+
+    public Transform SetTrnform(int Count)
+    {
+        if (Count < 5)
+        {
+            return Parent1_GameObject;
+        }
+        else if (Count < 10)
+        {
+            return Parent2_GameObject;
+        }
+        else
+        {
+            return Parent3_GameObject;
+        }
+
+    }
+    public void CreatCard_GameObjectList()
+    {
+        Card_GameObjects.Clear();
+        while (Card_GameObjects.Count < 13)
+        {
+            Card_GameObject();
+        }
+    }
+
+    public void ActiveObject(GameObject gameObject)
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void DeaciveObject(GameObject gameObject)
+    {
+        gameObject.SetActive(false);
+    }
+    public void Card_GameObject()
+    {
+        GameObject TempGameObject = Instantiate(Pref_GameObject, SetTrnform(Card_GameObjects.Count));
+        DeaciveObject(TempGameObject);
+        Card_GameObjects.Add(TempGameObject);
+    }
+
+    public void GameStart()
+    {
+        CreatCardList();
+        CreatCard_GameObjectList();
+
+    }
+
+
+    #endregion
+
 
 
 }
