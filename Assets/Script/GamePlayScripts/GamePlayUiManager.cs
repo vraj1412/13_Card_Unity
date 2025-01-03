@@ -189,6 +189,13 @@ public class GamePlayUiManager : MonoBehaviour
 
     #region Game Scripting
 
+
+    public void GameStart()
+    {
+        CreatCardList();
+        CreatCard_GameObjectList();
+
+    }
     public bool FindEliment(Card card, List<Card> cards)
     {
         for (int i = 0; i < cards.Count; i++)
@@ -270,12 +277,7 @@ public class GamePlayUiManager : MonoBehaviour
         Card_GameObjects.Add(TempGameObject);
     }
 
-    public void GameStart()
-    {
-        CreatCardList();
-        CreatCard_GameObjectList();
-
-    }
+   
 
 
     #endregion
