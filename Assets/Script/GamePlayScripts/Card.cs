@@ -1,17 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
+[Serializable]
 public enum Color
 {
-    Hearts,
     Diamonds,
     Clubs,
+    Hearts,
     Spades
-
 }
-public enum NameOfCard
+[Serializable]
+public enum Name
 {
     Ace,
     Two,
@@ -23,20 +25,19 @@ public enum NameOfCard
     Eight,
     Nine,
     Ten,
-    Jake,
+    Jack,
     Queen,
     King
-
 }
+[Serializable]
 public class Card : MonoBehaviour
-{
+{ 
     public Color Color;
-    public NameOfCard Name;
+    public Name Name;
 
-    public Card(Color color, NameOfCard name)
-    {
+   public Card(Color color, Name name)
+   {
         this.Color = color;
         this.Name = name;
-    }
-
+   }    
 }

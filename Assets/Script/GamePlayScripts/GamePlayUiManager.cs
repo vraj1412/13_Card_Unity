@@ -231,7 +231,8 @@ public class GamePlayUiManager : MonoBehaviour
 
     public Card LoadRendomCard()
     {
-        Card card = new Card((Color)Random.Range(0, 4), (NameOfCard)Random.Range(0, 13));
+
+        Card card = new Card((Color)Random.Range(0, 4), (Name)Random.Range(0, 13));
         return card;
 
     }
