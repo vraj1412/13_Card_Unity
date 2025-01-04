@@ -1,14 +1,13 @@
-using System.Collections;
+#region SettingPopUP elements
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class GamePlayUiManager : MonoBehaviour
 {
-    #region SettingPopUP elements
+    #region Sound And Music
     [Header("SettingPopUp")]
     public GameObject SettingPopUp;
     [Space]
@@ -36,11 +35,15 @@ public class GamePlayUiManager : MonoBehaviour
     #region  Game element
 
     public List<Sprite> Card_Sprite = new List<Sprite>();
-    // public List<Image> Card_Image = new List <Image>();
+    
     public List<Card> cards = new List<Card>();
     public List<GameObject> Card_GameObjects = new List<GameObject>();
 
     public GameObject Pref_GameObject;
+
+    public List<Card> Card_List1 = new List<Card>();
+    public List<Card> Card_List2 = new List<Card>();
+    public List<Card> Card_List3 = new List<Card>();
 
     public Transform Parent1_GameObject;
     public Transform Parent2_GameObject;
@@ -48,7 +51,7 @@ public class GamePlayUiManager : MonoBehaviour
 
     #endregion
 
-
+    public GamePlayManager Ref_GamePlayManager;
     public SoundAndMusicManager Ref_SoundAndMusicManager;
 
 
@@ -160,7 +163,7 @@ public class GamePlayUiManager : MonoBehaviour
 
         if (mute)
         {
-         
+
             StaticData.MuteMusic = 1;
             MusicImage.sprite = MuteMusicSprite;
             Ref_SoundAndMusicManager.MuiscMute(true);
@@ -169,7 +172,7 @@ public class GamePlayUiManager : MonoBehaviour
         }
         else
         {
-           
+
             StaticData.MuteMusic = 0;
             MusicImage.sprite = MusicSprite;
             Ref_SoundAndMusicManager.MuiscMute(false);
@@ -196,6 +199,38 @@ public class GamePlayUiManager : MonoBehaviour
         CreatCard_GameObjectList();
 
     }
+
+    public int GetCardIndex(Card card)
+    {
+        return (Ref_GamePlayManager.GetColor(card.Color)) + (Ref_GamePlayManager.GetValue(card.Name) - 2);
+    }
+
+
+
+    public void LoadCard()
+    {
+        for (int i = 0; i < Card_GameObjects.Count; i++)
+        {
+            SetCardData(GetCard(Card_GameObjects[i]), cards[i].Color, cards[i].Name);
+            LoadSprit(Card_GameObjects[i], GetCard(Card_GameObjects[i]));
+            ActiveObject(Card_GameObjects[i]);
+        }
+    }
+    public Card GetCard(GameObject gameObject)
+    {
+        return gameObject.GetComponent<Card>();
+
+    }
+    public void SetCardData(Card card, Color color, Name name)
+    {
+        card.Name = name;
+        card.Color = color;
+    }
+    public void LoadSprit(GameObject gameObject, Card card)
+    {
+        gameObject.GetComponent<Image>().sprite = Card_Sprite[GetCardIndex(card)];
+    }
+
     public bool FindEliment(Card card, List<Card> cards)
     {
         for (int i = 0; i < cards.Count; i++)
@@ -277,12 +312,21 @@ public class GamePlayUiManager : MonoBehaviour
         DeaciveObject(TempGameObject);
         Card_GameObjects.Add(TempGameObject);
     }
+    public Card Find_Card(Transform transform, int Index)
+    {
 
-   
 
+        return transform.GetChild(Index).GetComponent<Card>();
+    }
+
+
+    
 
     #endregion
-
-
-
 }
+
+
+
+
+
+#endregion
