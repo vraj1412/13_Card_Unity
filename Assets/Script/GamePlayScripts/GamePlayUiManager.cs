@@ -1,4 +1,4 @@
-#region SettingPopUP elements
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,26 +33,14 @@ public class GamePlayUiManager : MonoBehaviour
     [Space]
     [Space]
     #region  Game element
-
-    public List<Sprite> Card_Sprite = new List<Sprite>();
+    public List<Card> ListOFCards = new List<Card>(); 
     
-    public List<Card> cards = new List<Card>();
-    public List<GameObject> Card_GameObjects = new List<GameObject>();
-
-    public GameObject Pref_GameObject;
-
-    public List<Card> Card_List1 = new List<Card>();
-    public List<Card> Card_List2 = new List<Card>();
-    public List<Card> Card_List3 = new List<Card>();
-
-    public Transform Parent1_GameObject;
-    public Transform Parent2_GameObject;
-    public Transform Parent3_GameObject;
 
     #endregion
 
     public GamePlayManager Ref_GamePlayManager;
     public SoundAndMusicManager Ref_SoundAndMusicManager;
+    public Card Ref_card;
 
 
 
@@ -66,7 +54,7 @@ public class GamePlayUiManager : MonoBehaviour
         SetSoundAndMusicValue();
         Ref_SoundAndMusicManager.PlayMusic(BgMusic_Clip);
 
-        GameStart();
+        
     }
 
     #region SettingPopUP Open Close
@@ -193,131 +181,48 @@ public class GamePlayUiManager : MonoBehaviour
     #region Game Scripting
 
 
-    public void GameStart()
+    public void CreateCard(Card card)
     {
-        CreatCardList();
-        CreatCard_GameObjectList();
-
-    }
-
-    public int GetCardIndex(Card card)
-    {
-        return (Ref_GamePlayManager.GetColor(card.Color)) + (Ref_GamePlayManager.GetValue(card.Name) - 2);
-    }
-
-
-
-    public void LoadCard()
-    {
-        for (int i = 0; i < Card_GameObjects.Count; i++)
+        if (!ListOFCards.Any())
         {
-            SetCardData(GetCard(Card_GameObjects[i]), cards[i].Color, cards[i].Name);
-            LoadSprit(Card_GameObjects[i], GetCard(Card_GameObjects[i]));
-            ActiveObject(Card_GameObjects[i]);
+            ListOFCards.Add(card);
         }
-    }
-    public Card GetCard(GameObject gameObject)
-    {
-        return gameObject.GetComponent<Card>();
+        else if (!FindEliment(card, ListOFCards)){
 
-    }
-    public void SetCardData(Card card, Color color, Name name)
-    {
-        card.Name = name;
-        card.Color = color;
-    }
-    public void LoadSprit(GameObject gameObject, Card card)
-    {
-        gameObject.GetComponent<Image>().sprite = Card_Sprite[GetCardIndex(card)];
-    }
-
-    public bool FindEliment(Card card, List<Card> cards)
-    {
-        for (int i = 0; i < cards.Count; i++)
-        {
-            if (cards[i].Color == card.Color && cards[i].Name == card.Name)
-                return true;
-        }
-        return false;
-    }
-    public void CreatCard(Card card)
-    {
-
-        if (!cards.Any())
-        {
-            cards.Add(card);
-        }
-        else if (!FindEliment(card, cards))
-        {
-
-            cards.Add(card);
+            ListOFCards.Add(card);
             return;
+        
         }
+        
     }
 
-    public void CreatCardList()
+    public bool FindEliment(Card card,List<Card> ListOFCards)
     {
-        cards.Clear();
-        while (cards.Count < 13)
+        for (int i = 0; i < ListOFCards.Count; i++)
         {
-            CreatCard(LoadRendomCard());
-        }
+            if (ListOFCards[i].Color == card.Color && ListOFCards[i].Name == card.Name)
+
+                return true;
+        
+        }    
+        return false;   
     }
 
-    public Card LoadRendomCard()
+    public Card LoadCard()
     {
-
         Card card = new Card((Color)Random.Range(0, 4), (Name)Random.Range(0, 13));
         return card;
-
     }
 
-    public Transform SetTrnform(int Count)
+    public void CreateCardList()
     {
-        if (Count < 5)
+        ListOFCards.Clear();
+        if(ListOFCards.Count < 13)
         {
-            return Parent1_GameObject;
-        }
-        else if (Count < 10)
-        {
-            return Parent2_GameObject;
-        }
-        else
-        {
-            return Parent3_GameObject;
-        }
-
-    }
-    public void CreatCard_GameObjectList()
-    {
-        Card_GameObjects.Clear();
-        while (Card_GameObjects.Count < 13)
-        {
-            Card_GameObject();
+            CreateCard(LoadCard());
         }
     }
 
-    public void ActiveObject(GameObject gameObject)
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void DeaciveObject(GameObject gameObject)
-    {
-        gameObject.SetActive(false);
-    }
-    public void Card_GameObject()
-    {
-        GameObject TempGameObject = Instantiate(Pref_GameObject, SetTrnform(Card_GameObjects.Count));
-        DeaciveObject(TempGameObject);
-        Card_GameObjects.Add(TempGameObject);
-    }
-    public Card Find_Card(Transform transform, int Index)
-    {
-
-
-        return transform.GetChild(Index).GetComponent<Card>();
-    }
 
 
     
@@ -329,4 +234,3 @@ public class GamePlayUiManager : MonoBehaviour
 
 
 
-#endregion
